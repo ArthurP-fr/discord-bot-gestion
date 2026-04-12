@@ -69,11 +69,7 @@
         "slash": "Open the interactive presence panel"
       },
       "responses": {
-        "slashOnly": "This command is only available as a slash command.",
         "panel": "Presence panel\nStatus: {{status}}\nActivity: {{activityType}}\nRotation: every {{rotationIntervalSeconds}}s\nActive text ({{currentTextIndex}}/{{textCount}}): {{activityText}}\nRendered preview: {{activityPreview}}\nTexts: {{activityTexts}}\nVariables ({{doubleBracesHint}}): {{variables}}",
-        "statusUpdated": "Status updated to {{status}}.",
-        "activityUpdated": "Activity type updated to {{activityType}}.",
-        "textUpdated": "Presence text updated to: {{activityText}}",
         "notOwner": "Only the command author can use this panel.",
         "invalidSelection": "Invalid selection received.",
         "invalidInterval": "Invalid interval. Use an integer between {{minSeconds}} and {{maxSeconds}} seconds.",

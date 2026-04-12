@@ -69,11 +69,7 @@
         "slash": "Ouvrir le panneau interactif de presence"
       },
       "responses": {
-        "slashOnly": "Cette commande est disponible uniquement en slash.",
         "panel": "Panneau presence\nStatut: {{status}}\nActivite: {{activityType}}\nRotation: toutes les {{rotationIntervalSeconds}}s\nTexte actif ({{currentTextIndex}}/{{textCount}}): {{activityText}}\nApercu rendu: {{activityPreview}}\nTextes: {{activityTexts}}\nVariables ({{doubleBracesHint}}): {{variables}}",
-        "statusUpdated": "Statut mis a jour: {{status}}.",
-        "activityUpdated": "Type d activite mis a jour: {{activityType}}.",
-        "textUpdated": "Texte de presence mis a jour: {{activityText}}",
         "notOwner": "Seul l auteur de la commande peut utiliser ce panneau.",
         "invalidSelection": "Selection invalide.",
         "invalidInterval": "Intervalle invalide. Utilise un entier entre {{minSeconds}} et {{maxSeconds}} secondes.",

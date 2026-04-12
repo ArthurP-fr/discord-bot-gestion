@@ -69,11 +69,7 @@
         "slash": "Abrir el panel interactivo de presencia"
       },
       "responses": {
-        "slashOnly": "Este comando solo esta disponible como slash.",
         "panel": "Panel de presencia\nEstado: {{status}}\nActividad: {{activityType}}\nRotacion: cada {{rotationIntervalSeconds}}s\nTexto activo ({{currentTextIndex}}/{{textCount}}): {{activityText}}\nVista previa: {{activityPreview}}\nTextos: {{activityTexts}}\nVariables ({{doubleBracesHint}}): {{variables}}",
-        "statusUpdated": "Estado actualizado a {{status}}.",
-        "activityUpdated": "Tipo de actividad actualizado a {{activityType}}.",
-        "textUpdated": "Texto de presencia actualizado: {{activityText}}",
         "notOwner": "Solo el autor del comando puede usar este panel.",
         "invalidSelection": "Seleccion invalida.",
         "invalidInterval": "Intervalo invalido. Usa un entero entre {{minSeconds}} y {{maxSeconds}} segundos.",

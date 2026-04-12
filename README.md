@@ -82,6 +82,7 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 - `kiss` (`fun`) with required `user` arg
 - `ping` (`utility`)
 - `advanced` (`utility`) with full argument/permission example
+- `presence` (`utility`) with interactive status/activity/text panel
 - `help` (`core`) with auto category and usage generation
 
 ## Adding A Command
