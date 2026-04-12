@@ -11,7 +11,8 @@
     "permissions": {
       "user": "Tu n as pas les permissions: {{permissions}}"
     },
-    "execution": "Une erreur inattendue est survenue pendant l execution."
+    "execution": "Une erreur inattendue est survenue pendant l execution.",
+    "cooldown": "Patiente {{seconds}}s avant de reutiliser cette commande."
   },
   "categories": {
     "fun": "Fun",

@@ -11,7 +11,8 @@
     "permissions": {
       "user": "You are missing permissions: {{permissions}}"
     },
-    "execution": "An unexpected error happened while running this command."
+    "execution": "An unexpected error happened while running this command.",
+    "cooldown": "Please wait {{seconds}}s before using this command again."
   },
   "categories": {
     "fun": "Fun",

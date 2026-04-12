@@ -6,6 +6,7 @@ export const pingCommand = defineCommand({
     name: "ping",
     category: "utility",
   },
+  cooldown: 5,
   examples: [
     {
       descriptionKey: "examples.basic",

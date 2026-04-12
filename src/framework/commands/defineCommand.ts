@@ -18,14 +18,30 @@ const assertRequiredArgsBeforeOptional = (input: BotCommandInput): void => {
   }
 };
 
+const normalizeCooldown = (input: BotCommandInput): number | undefined => {
+  if (input.cooldown === undefined) {
+    return undefined;
+  }
+
+  if (!Number.isFinite(input.cooldown) || input.cooldown <= 0) {
+    throw new Error(
+      `Invalid cooldown for command "${input.meta.name}": expected a positive number of seconds, received "${input.cooldown}".`,
+    );
+  }
+
+  return input.cooldown;
+};
+
 export const defineCommand = (input: BotCommandInput): BotCommand => {
   assertRequiredArgsBeforeOptional(input);
+  const cooldown = normalizeCooldown(input);
 
   return {
     meta: input.meta,
     args: [...(input.args ?? [])],
     permissions: input.permissions ?? [],
     examples: input.examples ?? [],
+    ...(cooldown !== undefined ? { cooldown } : {}),
     execute: input.execute,
   };
 };

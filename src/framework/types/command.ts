@@ -98,6 +98,7 @@ export interface BotCommandInput {
   args?: CommandArgument[];
   permissions?: PermissionResolvable[];
   examples?: CommandExample[];
+  cooldown?: number;
   execute: (ctx: CommandExecutionContext) => Promise<void>;
 }
 
@@ -106,5 +107,6 @@ export interface BotCommand {
   args: CommandArgument[];
   permissions: PermissionResolvable[];
   examples: CommandExample[];
+  cooldown?: number;
   execute: (ctx: CommandExecutionContext) => Promise<void>;
 }

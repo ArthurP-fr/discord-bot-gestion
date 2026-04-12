@@ -8,10 +8,18 @@ import {
 import type { BotCommand, CommandExecutionContext } from "../types/command.js";
 
 export class CommandExecutor {
+  private readonly cooldowns = new Map<string, number>();
+
   public async run(command: BotCommand, ctx: CommandExecutionContext): Promise<void> {
     const missingUserPermissions = this.getMissingPermissions(command.permissions, this.memberPermissions(ctx));
     if (missingUserPermissions.length > 0) {
       await ctx.reply(ctx.t("errors.permissions.user", { permissions: missingUserPermissions.join(", ") }));
+      return;
+    }
+
+    const remainingCooldownSeconds = this.consumeCooldown(command, ctx.user.id);
+    if (remainingCooldownSeconds > 0) {
+      await ctx.reply(ctx.t("errors.cooldown", { seconds: remainingCooldownSeconds }));
       return;
     }
 
@@ -72,5 +80,26 @@ export class CommandExecutor {
       .replace(/([a-z])([A-Z])/g, "$1 $2")
       .replace(/_/g, " ")
       .trim();
+  }
+
+  private consumeCooldown(command: BotCommand, userId: string): number {
+    if (command.cooldown === undefined || command.cooldown <= 0) {
+      return 0;
+    }
+
+    const key = this.cooldownKey(command.meta.name, userId);
+    const now = Date.now();
+    const expiresAt = this.cooldowns.get(key);
+
+    if (expiresAt !== undefined && expiresAt > now) {
+      return Math.ceil((expiresAt - now) / 1000);
+    }
+
+    this.cooldowns.set(key, now + command.cooldown * 1000);
+    return 0;
+  }
+
+  private cooldownKey(commandName: string, userId: string): string {
+    return `${commandName}:${userId}`;
   }
 }

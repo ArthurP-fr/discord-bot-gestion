@@ -4,6 +4,7 @@ Professional command framework template for Discord.js `14.26.2` with:
 
 - Single command object schema
 - Minimal command authoring (`name`, `category`, `execute`)
+- Optional per-user command cooldown (`cooldown` in seconds)
 - Shared execution logic for prefix and slash
 - External JSON i18n
 - Automatic prefix and slash localizations from locale files
@@ -69,13 +70,13 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 - `src/framework/commands/defineCommand.ts`: default command completion
 - `src/framework/commands/registry.ts`: trigger/name mapping generated from locales
 - `src/framework/commands/argParser.ts`: prefix/slash args parsing from schema
-- `src/framework/execution/CommandExecutor.ts`: unified pipeline (permissions/execute)
+- `src/framework/execution/CommandExecutor.ts`: unified pipeline (permissions/cooldown/execute)
 - `src/framework/handlers/prefixHandler.ts`: prefix entrypoint
 - `src/framework/handlers/slashHandler.ts`: slash entrypoint
 - `src/framework/presence/presenceStore.ts`: PostgreSQL presence storage
 - `src/framework/presence/presenceTypes.ts`: shared presence types/validation
 - `locales/*.json`: external i18n dictionaries
-- `src/commands/*`: business commands only (`execute`)
+- `src/commands/*`: business commands only (`execute`, optional `cooldown`)
 
 ## Included Commands
 
