@@ -1,3 +1,10 @@
+/**
+ * Commande `advanced` (utility)
+ *
+ * Exemple de commande démontrant la gestion de plusieurs types d'arguments
+ * (string, int, user, number, boolean, channel, role) et l'utilisation d'un
+ * template de réponse configurable via `commandText.responses.summary`.
+ */
 import { PermissionFlagsBits } from "discord.js";
 
 import { defineCommand } from "../../framework/commands/defineCommand.js";
@@ -24,6 +31,9 @@ const toDisplayValue = (value: unknown, formatter?: (id: string) => string): str
   return String(value);
 };
 
+/**
+ * Commande `advanced` — affiche un résumé formaté des arguments fournis.
+ */
 export const advancedCommand = defineCommand({
   meta: {
     name: "advanced",

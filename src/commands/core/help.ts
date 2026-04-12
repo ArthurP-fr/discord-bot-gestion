@@ -1,3 +1,12 @@
+/**
+ * Commande `help`
+ *
+ * Construit un embed d'aide global listant les commandes par catégorie, ou
+ * affiche les détails pour une commande spécifique si un argument est fourni.
+ *
+ * Export:
+ * - `helpCommand`: BotCommand (défini via `defineCommand`)
+ */
 import { EmbedBuilder } from "discord.js";
 
 import { buildPrefixUsage, buildSlashUsage, resolvePrefixTrigger, resolveSlashName } from "../../framework/commands/usage.js";
@@ -113,6 +122,9 @@ const buildCommandDetailsEmbed = (ctx: CommandExecutionContext, command: BotComm
     .setFooter({ text: ctx.ct("embed.footer", { source: command.meta.category }) });
 };
 
+/**
+ * Commande `help` — renvoie un embed d'aide global ou les détails d'une commande.
+ */
 export const helpCommand = defineCommand({
   meta: {
     name: "help",

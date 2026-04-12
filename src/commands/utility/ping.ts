@@ -1,6 +1,12 @@
+/**
+ * Commande `ping` (utility)
+ *
+ * Répond avec un message court contenant la latence websocket du bot.
+ */
 import { MessageFlags } from "discord.js";
 import { defineCommand } from "../../framework/commands/defineCommand.js";
 
+/** Commande `ping` — affiche la latence du bot. */
 export const pingCommand = defineCommand({
   meta: {
     name: "ping",

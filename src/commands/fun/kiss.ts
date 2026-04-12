@@ -1,5 +1,12 @@
+/**
+ * Commande `kiss` (fun)
+ *
+ * Envoie une réponse de type `kissing` ciblant un utilisateur mentionné.
+ * Utilise un seul argument `user` de type `user`.
+ */
 import { defineCommand } from "../../framework/commands/defineCommand.js";
 
+/** Commande `kiss` — envoie un message de type `kiss` vers la cible. */
 export const kissCommand = defineCommand({
   meta: {
     name: "kiss",

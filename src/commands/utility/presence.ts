@@ -1,3 +1,11 @@
+/**
+ * Module `presence` — gestion des présences du bot
+ *
+ * Contient la logique de timers, rotation d'activités, rendu de templates
+ * et l'UI panel d'administration. Le module expose des helpers pour restaurer
+ * l'état (`restorePresenceFromStorage`), arrêter les timers (`shutdownPresenceRuntime`)
+ * et la commande `presence` qui affiche le panneau.
+ */
 import {
   ActivityType,
   ActionRowBuilder,
@@ -96,6 +104,9 @@ const resolveRuntimeState = (client: Client): PresenceRuntimeState => {
   return next;
 };
 
+/**
+ * Stoppe toutes les tâches runtime liées aux présences et libère les sessions.
+ */
 export const shutdownPresenceRuntime = (): void => {
   for (const runtimeState of presenceRuntimeByBotId.values()) {
     clearRuntimeTimers(runtimeState);
@@ -395,6 +406,9 @@ const persistAndApplyPresence = async (
   await savePresenceState(ctx.client, state);
 };
 
+/**
+ * Charge et applique l'état de présence depuis le stockage pour un client.
+ */
 export const restorePresenceFromStorage = async (client: Client): Promise<void> => {
   const state = await loadPresenceState(client);
   const runtimeState = resolveRuntimeState(client);
@@ -403,6 +417,9 @@ export const restorePresenceFromStorage = async (client: Client): Promise<void> 
   syncDynamicPresenceTimers(client, state, runtimeState);
 };
 
+/**
+ * Commande `presence` — ouvre le panneau de gestion de la présence pour le bot.
+ */
 export const presenceCommand = defineCommand({
   meta: {
     name: "presence",

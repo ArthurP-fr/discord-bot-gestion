@@ -1,3 +1,14 @@
+/**
+ * Panneau de configuration pour les messages de bienvenue / départ
+ *
+ * Contient la logique UI (Components v2), collectors et sessions pour afficher
+ * et gérer un panneau interactif permettant de configurer les messages
+ * d'accueil et d'au revoir par guild.
+ *
+ * Export:
+ * - `createMemberMessageExecute(kind)` : factory utilisée par les commandes
+ *   `welcome` et `goodbye` pour attacher le panneau.
+ */
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -203,6 +214,12 @@ const testFeedbackKey = (reason: string): string => {
   }
 };
 
+/**
+ * Factory qui crée l'exécuteur de commande pour un `MemberMessageKind` donné.
+ *
+ * Le handler retourné gère l'affichage du panneau, la collecte d'interactions
+ * et la persistance de la configuration via `memberMessageStore`.
+ */
 export const createMemberMessageExecute = (kind: MemberMessageKind) => {
   return async (ctx: CommandExecutionContext): Promise<void> => {
     if (!ctx.guild) {
