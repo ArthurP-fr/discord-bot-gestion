@@ -165,19 +165,22 @@ export const initPresenceStore = async (): Promise<PresenceStore> => {
     return store;
   }
 
-  if (!env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is required to initialize PostgreSQL presence storage.");
-  }
-
   const pool = new Pool({
     connectionString: env.DATABASE_URL,
     ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : undefined,
   });
 
   const nextStore = new PresenceStore(pool);
-  await nextStore.init();
-  store = nextStore;
-  return nextStore;
+  try {
+    await nextStore.init();
+    store = nextStore;
+    return nextStore;
+  } catch (error) {
+    await pool.end().catch(() => {
+      // Ignore close errors; the original init error is the one we want to surface.
+    });
+    throw error;
+  }
 };
 
 export const getPresenceStore = (): PresenceStore => {

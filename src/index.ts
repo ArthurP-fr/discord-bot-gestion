@@ -94,10 +94,10 @@ const bootstrap = async (): Promise<void> => {
   await client.login(env.DISCORD_TOKEN);
 };
 
-bootstrap().catch((error) => {
+bootstrap().catch(async (error) => {
   console.error("[boot] fatal error", error);
-  void shutdownPresenceStore().catch((closeError) => {
+  await shutdownPresenceStore().catch((closeError) => {
     console.error("[boot] failed to close presence store", closeError);
   });
-  process.exitCode = 1;
+  process.exit(1);
 });
