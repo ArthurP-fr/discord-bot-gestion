@@ -1,3 +1,4 @@
+import { MessageFlags } from "discord.js";
 import { defineCommand } from "../../framework/commands/defineCommand.js";
 
 export const pingCommand = defineCommand({
@@ -14,10 +15,11 @@ export const pingCommand = defineCommand({
     const responses = (ctx.commandText.responses as Record<string, unknown> | undefined) ?? {};
     const template = typeof responses.pong === "string" ? responses.pong : "Pong {{latency}}ms";
 
-    await ctx.reply(
-      ctx.format(template, {
+    await ctx.reply({
+      content: ctx.format(template, {
         latency: ctx.client.ws.ping,
       }),
-    );
+      flags: [MessageFlags.Ephemeral],
+    });
   },
 });
