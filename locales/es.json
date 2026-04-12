@@ -1,0 +1,100 @@
+{
+  "errors": {
+    "args": {
+      "missing": "Falta el argumento {{arg}}. Uso: {{usage}}",
+      "invalidInt": "El argumento debe ser un entero. Recibido: {{value}}",
+      "invalidNumber": "El argumento debe ser un numero. Recibido: {{value}}",
+      "invalidBoolean": "El argumento debe ser un valor booleano. Recibido: {{value}}",
+      "invalidUser": "No se pudo resolver un usuario desde {{value}}"
+    },
+    "permissions": {
+      "user": "Te faltan permisos: {{permissions}}"
+    },
+    "execution": "Ocurrio un error inesperado al ejecutar este comando."
+  },
+  "categories": {
+    "fun": "Diversion",
+    "utility": "Utilidad",
+    "core": "Nucleo"
+  },
+  "commands": {
+    "kiss": {
+      "name": "beso",
+      "description": "Enviar un beso a otro usuario.",
+      "args": {
+        "user": "Usuario objetivo"
+      },
+      "examples": {
+        "basic": "Enviar un beso a un miembro"
+      },
+      "responses": {
+        "success": "{{from}} envia un beso a {{to}}."
+      }
+    },
+    "ping": {
+      "name": "ping",
+      "description": "Revisar latencia websocket del bot.",
+      "examples": {
+        "basic": "Chequeo basico"
+      },
+      "responses": {
+        "pong": "Pong. Latencia websocket: {{latency}}ms."
+      }
+    },
+    "advanced": {
+      "name": "avanzada",
+      "description": "Comando de demostracion que usa todos los parametros disponibles.",
+      "args": {
+        "text": "Texto obligatorio",
+        "count": "Entero obligatorio",
+        "ratio": "Numero decimal opcional",
+        "enabled": "Bandera booleana opcional",
+        "user": "Usuario objetivo obligatorio",
+        "channel": "Canal opcional",
+        "role": "Rol opcional"
+      },
+      "examples": {
+        "full": "Ejemplo prefix completo con todos los tipos de argumentos",
+        "slash": "Equivalente en slash"
+      },
+      "responses": {
+        "summary": "Resumen comando avanzada\ntext={{text}}\ncount={{count}}\nratio={{ratio}}\nenabled={{enabled}}\nuser={{user}}\nchannel={{channel}}\nrole={{role}}\nsource={{source}}"
+      }
+    },
+    "help": {
+      "name": "ayuda",
+      "description": "Mostrar lista de comandos o detalles de un comando.",
+      "args": {
+        "command": "Nombre o trigger opcional del comando"
+      },
+      "examples": {
+        "basic": "Listar todos los comandos",
+        "single": "Mostrar detalles de un comando"
+      },
+      "errors": {
+        "notFound": "Ningun comando coincide con {{query}}."
+      },
+      "embed": {
+        "title": "Ayuda de Comandos",
+        "description": "Usa {{usage}} para inspeccionar un comando.",
+        "categoryEmpty": "No hay comandos en esta categoria.",
+        "detailsTitle": "Comando: {{name}}",
+        "detailsDescription": "{{description}}",
+        "footer": "Categoria: {{source}}",
+        "fields": {
+          "usage": "Uso",
+          "arguments": "Argumentos",
+          "examples": "Ejemplos"
+        }
+      },
+      "labels": {
+        "prefix": "Prefijo",
+        "slash": "Slash",
+        "required": "requerido",
+        "optional": "opcional",
+        "noArgs": "Sin argumentos.",
+        "noExamples": "Sin ejemplos."
+      }
+    }
+  }
+}

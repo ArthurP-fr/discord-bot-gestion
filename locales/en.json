@@ -1,0 +1,100 @@
+{
+  "errors": {
+    "args": {
+      "missing": "Missing argument {{arg}}. Usage: {{usage}}",
+      "invalidInt": "Argument must be an integer. Received: {{value}}",
+      "invalidNumber": "Argument must be a number. Received: {{value}}",
+      "invalidBoolean": "Argument must be a boolean value. Received: {{value}}",
+      "invalidUser": "Could not resolve a user from {{value}}"
+    },
+    "permissions": {
+      "user": "You are missing permissions: {{permissions}}"
+    },
+    "execution": "An unexpected error happened while running this command."
+  },
+  "categories": {
+    "fun": "Fun",
+    "utility": "Utility",
+    "core": "Core"
+  },
+  "commands": {
+    "kiss": {
+      "name": "kiss",
+      "description": "Send a kiss to another user.",
+      "args": {
+        "user": "Target user"
+      },
+      "examples": {
+        "basic": "Send a kiss to a member"
+      },
+      "responses": {
+        "success": "{{from}} sends a kiss to {{to}}."
+      }
+    },
+    "ping": {
+      "name": "ping",
+      "description": "Check bot websocket latency.",
+      "examples": {
+        "basic": "Basic health check"
+      },
+      "responses": {
+        "pong": "Pong. Websocket latency: {{latency}}ms."
+      }
+    },
+    "advanced": {
+      "name": "advanced",
+      "description": "Showcase command using every available command parameter.",
+      "args": {
+        "text": "Required text value",
+        "count": "Required integer value",
+        "ratio": "Optional decimal number",
+        "enabled": "Optional boolean flag",
+        "user": "Required target user",
+        "channel": "Optional channel",
+        "role": "Optional role"
+      },
+      "examples": {
+        "full": "Complete prefix example with all argument types",
+        "slash": "Equivalent slash usage"
+      },
+      "responses": {
+        "summary": "Advanced command summary\ntext={{text}}\ncount={{count}}\nratio={{ratio}}\nenabled={{enabled}}\nuser={{user}}\nchannel={{channel}}\nrole={{role}}\nsource={{source}}"
+      }
+    },
+    "help": {
+      "name": "help",
+      "description": "Display command list or details for one command.",
+      "args": {
+        "command": "Optional command name or trigger"
+      },
+      "examples": {
+        "basic": "List all commands",
+        "single": "Show details for one command"
+      },
+      "errors": {
+        "notFound": "No command matches {{query}}."
+      },
+      "embed": {
+        "title": "Command Help",
+        "description": "Use {{usage}} to inspect one command.",
+        "categoryEmpty": "No commands in this category.",
+        "detailsTitle": "Command: {{name}}",
+        "detailsDescription": "{{description}}",
+        "footer": "Category: {{source}}",
+        "fields": {
+          "usage": "Usage",
+          "arguments": "Arguments",
+          "examples": "Examples"
+        }
+      },
+      "labels": {
+        "prefix": "Prefix",
+        "slash": "Slash",
+        "required": "required",
+        "optional": "optional",
+        "noArgs": "No arguments.",
+        "noExamples": "No examples."
+      }
+    }
+  }
+}

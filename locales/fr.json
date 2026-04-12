@@ -1,0 +1,100 @@
+{
+  "errors": {
+    "args": {
+      "missing": "Argument manquant {{arg}}. Usage: {{usage}}",
+      "invalidInt": "L argument doit etre un entier. Recu: {{value}}",
+      "invalidNumber": "L argument doit etre un nombre. Recu: {{value}}",
+      "invalidBoolean": "L argument doit etre un booleen. Recu: {{value}}",
+      "invalidUser": "Impossible de trouver un utilisateur depuis {{value}}"
+    },
+    "permissions": {
+      "user": "Tu n as pas les permissions: {{permissions}}"
+    },
+    "execution": "Une erreur inattendue est survenue pendant l execution."
+  },
+  "categories": {
+    "fun": "Fun",
+    "utility": "Utilitaire",
+    "core": "Base"
+  },
+  "commands": {
+    "kiss": {
+      "name": "bisou",
+      "description": "Envoyer un bisou a un utilisateur.",
+      "args": {
+        "user": "Utilisateur cible"
+      },
+      "examples": {
+        "basic": "Envoyer un bisou a un membre"
+      },
+      "responses": {
+        "success": "{{from}} envoie un bisou a {{to}}."
+      }
+    },
+    "ping": {
+      "name": "ping",
+      "description": "Verifier la latence websocket du bot.",
+      "examples": {
+        "basic": "Verification de sante"
+      },
+      "responses": {
+        "pong": "Pong. Latence websocket: {{latency}}ms."
+      }
+    },
+    "advanced": {
+      "name": "avance",
+      "description": "Commande de demonstration utilisant tous les parametres disponibles.",
+      "args": {
+        "text": "Texte requis",
+        "count": "Entier requis",
+        "ratio": "Nombre decimal optionnel",
+        "enabled": "Booleen optionnel",
+        "user": "Utilisateur cible requis",
+        "channel": "Salon optionnel",
+        "role": "Role optionnel"
+      },
+      "examples": {
+        "full": "Exemple prefix complet avec tous les types d arguments",
+        "slash": "Equivalent en slash"
+      },
+      "responses": {
+        "summary": "Resume commande avancee\ntext={{text}}\ncount={{count}}\nratio={{ratio}}\nenabled={{enabled}}\nuser={{user}}\nchannel={{channel}}\nrole={{role}}\nsource={{source}}"
+      }
+    },
+    "help": {
+      "name": "aide",
+      "description": "Afficher la liste des commandes ou les details d une commande.",
+      "args": {
+        "command": "Nom ou trigger de commande optionnel"
+      },
+      "examples": {
+        "basic": "Afficher toutes les commandes",
+        "single": "Afficher les details d une commande"
+      },
+      "errors": {
+        "notFound": "Aucune commande ne correspond a {{query}}."
+      },
+      "embed": {
+        "title": "Aide Commandes",
+        "description": "Utilise {{usage}} pour inspecter une commande.",
+        "categoryEmpty": "Aucune commande dans cette categorie.",
+        "detailsTitle": "Commande: {{name}}",
+        "detailsDescription": "{{description}}",
+        "footer": "Categorie: {{source}}",
+        "fields": {
+          "usage": "Usage",
+          "arguments": "Arguments",
+          "examples": "Exemples"
+        }
+      },
+      "labels": {
+        "prefix": "Prefix",
+        "slash": "Slash",
+        "required": "requis",
+        "optional": "optionnel",
+        "noArgs": "Aucun argument.",
+        "noExamples": "Aucun exemple."
+      }
+    }
+  }
+}
