@@ -6,8 +6,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY tsconfig.json ./
+COPY scripts ./scripts
 COPY src ./src
-COPY locales ./locales
 
 RUN npm run build
 
@@ -19,7 +19,6 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-COPY --from=builder /app/dist ./dist
-COPY locales ./locales
+COPY --from=builder /app/build ./build
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "build/index.js"]

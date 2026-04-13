@@ -32,11 +32,11 @@ Professional command framework template for Discord.js `14.26.2` with:
 4. Optional values:
    - `DATABASE_SSL` (`true` for managed cloud DB, `false` for local Docker)
    - `PRESENCE_STREAM_URL` (used when activity type is `STREAMING`)
-5. Deploy slash commands:
-   npm run deploy:commands
-6. Start in development:
+   - `AUTO_DEPLOY_SLASH` (`true` to sync slash commands on startup)
+   - `DEV_GUILD_ID` (optional guild scope for faster slash sync)
+5. Start in development:
    npm run dev
-7. Validate code quality:
+6. Validate code quality:
    - npm run typecheck
    - npm run test
    - npm run check
@@ -81,14 +81,14 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 
 - `src/framework/types/command.ts`: strict command schema
 - `src/framework/commands/defineCommand.ts`: default command completion
-- `src/framework/commands/registry.ts`: trigger/name mapping generated from locales
+- `src/framework/commands/registry.ts`: trigger/name mapping generated from i18n dictionaries
 - `src/framework/commands/argParser.ts`: prefix/slash args parsing from schema
 - `src/framework/execution/CommandExecutor.ts`: unified pipeline (permissions/cooldown/execute)
 - `src/framework/handlers/prefixHandler.ts`: prefix entrypoint
 - `src/framework/handlers/slashHandler.ts`: slash entrypoint
 - `src/framework/presence/presenceStore.ts`: PostgreSQL presence storage
 - `src/framework/presence/presenceTypes.ts`: shared presence types/validation
-- `locales/*.json`: external i18n dictionaries
+- `src/i18n/*.json`: external i18n dictionaries
 - `src/commands/*`: business commands only (`execute`, optional `cooldown`)
 
 ## Included Commands
@@ -104,4 +104,4 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 1. Create a command object in `src/commands/...`
 2. Follow the schema in `src/framework/types/command.ts`
 3. Add command to `src/commands/index.ts`
-4. Deploy slash commands again (`npm run deploy:commands`)
+4. If `AUTO_DEPLOY_SLASH=true`, restart the bot to sync slash commands automatically

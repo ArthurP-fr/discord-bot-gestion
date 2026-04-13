@@ -5,7 +5,7 @@ import {
   extractTemplateVariables,
   hasTemplateVariable,
   renderTemplate,
-} from "../framework/utils/templateVariables.js";
+} from "../src/framework/utils/templateVariables.js";
 
 test("renderTemplate remplace les variables et applique les alias", () => {
   const output = renderTemplate(

@@ -1,6 +1,6 @@
 import type { BotCommand, PrefixTriggerMatch } from "../types/command.js";
 import { SUPPORTED_LANGS } from "../types/command.js";
-import type { I18nService } from "../i18n/I18nService.js";
+import type { I18nService } from "../../i18n/index.js";
 
 const normalize = (value: string): string => value.trim().toLowerCase();
 

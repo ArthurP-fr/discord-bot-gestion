@@ -18,7 +18,7 @@ import { env } from "./framework/config/env.js";
 import { CommandExecutor } from "./framework/execution/CommandExecutor.js";
 import { createPrefixHandler } from "./framework/handlers/prefixHandler.js";
 import { createSlashHandler } from "./framework/handlers/slashHandler.js";
-import { I18nService } from "./framework/i18n/I18nService.js";
+import { I18nService } from "./i18n/index.js";
 import {
   initMemberMessageStore,
   shutdownMemberMessageStore,

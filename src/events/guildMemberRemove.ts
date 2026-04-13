@@ -1,5 +1,5 @@
 import { Events, type Client } from "discord.js";
-import type { I18nService } from "../framework/i18n/I18nService.js";
+import type { I18nService } from "../i18n/index.js";
 import { dispatchMemberMessage } from "../framework/memberMessages/memberMessageSender.js";
 
 /**

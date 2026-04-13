@@ -1,5 +1,5 @@
 import type { Client, Message, ChatInputCommandInteraction } from "discord.js";
-import type { I18nService } from "../framework/i18n/I18nService.js";
+import type { I18nService } from "../i18n/index.js";
 
 import { registerMessageCreate } from "./messageCreate.js";
 import { registerInteractionCreate } from "./interactionCreate.js";

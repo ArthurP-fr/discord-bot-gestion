@@ -11,7 +11,7 @@ import {
   type User,
 } from "discord.js";
 
-import type { I18nService } from "../i18n/I18nService.js";
+import type { I18nService } from "../../i18n/index.js";
 import type { SupportedLang } from "../types/command.js";
 import { renderMemberMessageImage } from "./memberMessageImage.js";
 import { getMemberMessageStore } from "./memberMessageStore.js";

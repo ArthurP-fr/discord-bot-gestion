@@ -1,5 +1,5 @@
 import type { CommandRegistry } from "../commands/registry.js";
-import type { I18nService } from "../i18n/I18nService.js";
+import type { I18nService } from "../../i18n/index.js";
 import type {
   BotCommand,
   CommandExecutionContext,

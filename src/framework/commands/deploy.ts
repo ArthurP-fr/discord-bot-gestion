@@ -2,7 +2,7 @@ import { REST, Routes } from "discord.js";
 
 import { buildSlashPayload } from "./slashBuilder.js";
 import type { CommandRegistry } from "./registry.js";
-import type { I18nService } from "../i18n/I18nService.js";
+import type { I18nService } from "../../i18n/index.js";
 
 export interface DeployCommandsOptions {
   token: string;

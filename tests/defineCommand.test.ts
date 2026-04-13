@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { defineCommand } from "../framework/commands/defineCommand.js";
+import { defineCommand } from "../src/framework/commands/defineCommand.js";
 
 test("defineCommand refuse un argument requis apres un optionnel", () => {
   assert.throws(() => {

@@ -23,7 +23,7 @@ import {
 } from "discord.js";
 
 import { env } from "../framework/config/env.js";
-import { I18nService } from "../framework/i18n/I18nService.js";
+import { I18nService } from "../i18n/index.js";
 import { dispatchMemberMessage } from "../framework/memberMessages/memberMessageSender.js";
 import { getMemberMessageStore } from "../framework/memberMessages/memberMessageStore.js";
 import {

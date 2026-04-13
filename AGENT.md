@@ -8,22 +8,19 @@ Ce fichier décrit le projet, sa structure, les conventions de code et la procé
 
 Vue d'ensemble du projet
 -----------------------
-- Tech stack: TypeScript + Discord.js (bot template). Le code source est dans `src/` et la sortie build dans `dist/` (à ignorer).
-- Localisation: `locales/` contient `en.json`, `fr.json`, `es.json`.
-- Scripts utiles: `scripts/deployCommands.ts` pour (re)déployer les slash commands.
+- Tech stack: TypeScript + Discord.js (bot template). Le code source est dans `src/` et la sortie build dans `build/` (à ignorer).
+- Localisation: `src/i18n/` contient `en.json`, `fr.json`, `es.json`.
 
 Organisation des fichiers
 ------------------------
 - Racine:
   - `package.json`, `tsconfig.json`, `Dockerfile`, `docker-compose.yml` — scripts et infra.
-  - `locales/` — fichiers de traduction.
 - `src/` (code TypeScript):
   - `index.ts` — point d'entrée, boot du bot.
   - `commands/` — définitions de commandes (chaque fichier expose une commande). 
   - `events/` — un fichier par événement Discord (ex: `guildMemberAdd.ts`). `src/events/index.ts` centralise l'enregistrement.
   - `framework/` — bibliothèque interne: helpers commandes, `i18n/`, `memberMessages/`, `presence/`, `execution/`, `handlers/`, `config/`, `types/`.
   - `utils/` — helpers génériques (ex: `templateVariables.ts`).
-  - `scripts/` — utilitaires (ex: `deployCommands.ts`).
 - `tests/` — tests unitaires ciblant managers, stores et utilitaires.
 
 Principes et conventions de code
@@ -33,7 +30,7 @@ Principes et conventions de code
 - Events: un seul fichier par événement; exporter une fonction `registerX(client, i18n)` ou une fonction d'enregistrement équivalente. Centraliser les imports dans `src/events/index.ts`.
 - Typage: utiliser TypeScript strict, signatures fortement typées pour les handlers (`onPrefixMessage(message: Message)` etc.).
 - Tests: privilégier les tests unitaires pour managers/stores/transformations. Mockez les adaptateurs Discord.
-- i18n: utiliser `I18nService` pour traductions. Ajouter toutes les clés dans `locales/*.json`.
+- i18n: utiliser `I18nService` pour traductions. Ajouter toutes les clés dans `src/i18n/*.json`.
 - Nommage: fichiers en lowerCamelCase (ex: `welcome.ts`, `memberMessagePanel.ts`). Exports nommés préférés pour faciliter le mocking.
 - Sécurité: ne pas committer de secrets (`.env*` doit être dans `.gitignore`).
 
@@ -42,9 +39,9 @@ Procédure standard pour ajouter une nouvelle commande
 1. Créer le fichier dans `src/commands/myCommand.ts`.
 2. Utiliser `defineCommand({ meta, args, examples, execute })` pour déclarer la commande.
 3. Implémenter `execute()` de façon minimale: valider les args et appeler un service dans `src/framework/` si la logique est non triviale.
-4. Ajouter les clés de traduction dans `locales/en.json`, `locales/fr.json`, `locales/es.json` (ex: `commands.myCommand.success`).
+4. Ajouter les clés de traduction dans `src/i18n/en.json`, `src/i18n/fr.json`, `src/i18n/es.json` (ex: `commands.myCommand.success`).
 5. Écrire des tests unitaires dans `tests/` pour le service/manager; si la commande est juste un wrapper, testez le service.
-6. Si c'est une slash command, vérifier que `scripts/deployCommands.ts`/le registre inclut la commande; exécuter le déploiement si nécessaire.
+6. Si c'est une slash command, vérifier que le registre inclut la commande; redémarrer le bot avec `AUTO_DEPLOY_SLASH=true` si synchronisation nécessaire.
 7. Lancer `npm run build` puis `npm test` (ou la suite de scripts définie dans `package.json`).
 8. Ouvrir une PR documentant le changement et incluant les tests et les traductions.
 
@@ -75,7 +72,7 @@ Tests et CI
 Déploiement / exécution
 -----------------------
 - Utiliser `Dockerfile` / `docker-compose.yml` fournis pour le déploiement en conteneur.
-- Pour les slash commands, exécuter `scripts/deployCommands.ts` (ou le script npm associé).
+- Pour les slash commands, activer `AUTO_DEPLOY_SLASH=true` pour une synchronisation automatique au démarrage.
 
 Revue et PR
 -----------
