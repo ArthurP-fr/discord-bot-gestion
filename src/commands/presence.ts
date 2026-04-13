@@ -21,8 +21,8 @@ import {
   type Client,
   type Message,
 } from "discord.js";
-import { defineCommand } from "../framework/commands/defineCommand.js";
-import { env } from "../framework/config/env.js";
+import { defineCommand } from "../core/commands/defineCommand.js";
+import { env } from "../config/env.js";
 import type {
   DiscordPresenceStatus,
   PresenceActivityTypeValue,
@@ -38,7 +38,7 @@ import {
   containsPresenceTemplateVariables,
   getPresenceTemplateHelpText,
   renderPresenceTemplate,
-} from "../framework/presence/presenceTemplateVariables.js";
+} from "../services/presence/presenceTemplateVariables.js";
 import {
   PRESENCE_ACTIVITY_TYPES,
   PRESENCE_STATUSES,

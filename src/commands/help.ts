@@ -9,8 +9,8 @@
  */
 import { EmbedBuilder } from "discord.js";
 
-import { buildPrefixUsage, buildSlashUsage, resolvePrefixTrigger, resolveSlashName } from "../framework/commands/usage.js";
-import { defineCommand } from "../framework/commands/defineCommand.js";
+import { buildPrefixUsage, buildSlashUsage, resolvePrefixTrigger, resolveSlashName } from "../core/commands/usage.js";
+import { defineCommand } from "../core/commands/defineCommand.js";
 import type { BotCommand, CommandExecutionContext } from "../types/command.js";
 
 const categoryName = (command: BotCommand): string => command.meta.category;

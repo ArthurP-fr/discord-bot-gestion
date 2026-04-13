@@ -1,6 +1,6 @@
 import { Events, type Client } from "discord.js";
 import type { I18nService } from "../i18n/index.js";
-import { dispatchMemberMessage } from "../framework/memberMessages/memberMessageSender.js";
+import { dispatchMemberMessage } from "../services/memberMessages/memberMessageSender.js";
 
 /**
  * Enregistre le listener `guildMemberRemove` et déclenche l'envoi d'un message

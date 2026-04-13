@@ -8,7 +8,7 @@ import { registerGuildMemberRemove } from "./guildMemberRemove.js";
 import { registerGuildCreate } from "./guildCreate.js";
 import { registerGuildDelete } from "./guildDelete.js";
 import { registerClientReady } from "./ready.js";
-import type { CommandRegistry } from "../framework/commands/registry.js";
+import type { CommandRegistry } from "../core/commands/registry.js";
 
 /**
  * Regroupe l'enregistrement des événements Discord les plus courants.

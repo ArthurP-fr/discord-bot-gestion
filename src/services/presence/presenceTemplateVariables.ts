@@ -1,7 +1,7 @@
 import type { Client } from "discord.js";
 
-import { env } from "../config/env.js";
-import { hasTemplateVariable, renderTemplate } from "../utils/templateVariables.js";
+import { env } from "../../config/env.js";
+import { hasTemplateVariable, renderTemplate } from "../../utils/templateVariables.js";
 import { sanitizeActivityText } from "../../types/presenceTypes.js";
 
 export const PRESENCE_TEMPLATE_REFRESH_INTERVAL_MS = 60_000;

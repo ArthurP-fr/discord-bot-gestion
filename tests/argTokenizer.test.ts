@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { tokenizePrefixInput } from "../src/framework/commands/argParser.js";
+import { tokenizePrefixInput } from "../src/core/commands/argParser.js";
 
 test("tokenizePrefixInput parse les quotes simples et doubles", () => {
   const tokens = tokenizePrefixInput('"hello world" test \'foo bar\'');

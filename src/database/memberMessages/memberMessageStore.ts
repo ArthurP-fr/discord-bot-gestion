@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 
-import { env } from "../../framework/config/env.js";
+import { env } from "../../config/env.js";
 import type {
   MemberMessageConfig,
   MemberMessageKind,

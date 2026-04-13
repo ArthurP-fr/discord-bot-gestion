@@ -6,7 +6,7 @@
  */
 import { PermissionFlagsBits } from "discord.js";
 
-import { defineCommand } from "../framework/commands/defineCommand.js";
+import { defineCommand } from "../core/commands/defineCommand.js";
 import { createMemberMessageExecute } from "./memberMessagePanel.js";
 
 /** Commande `welcome` — ouvre le panneau de configuration des messages 'welcome'. */

@@ -2,8 +2,8 @@ import type { Message } from "discord.js";
 import type { BotCommand, SupportedLang } from "../types/command.js";
 import type { PrefixHandlerDeps } from "../types/handlers.js";
 
-import { parsePrefixArgs } from "../framework/commands/argParser.js";
-import { buildPrefixUsage } from "../framework/commands/usage.js";
+import { parsePrefixArgs } from "../core/commands/argParser.js";
+import { buildPrefixUsage } from "../core/commands/usage.js";
 import {
   buildCommandExecutionContext,
   createTranslator,

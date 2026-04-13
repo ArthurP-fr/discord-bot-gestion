@@ -1,5 +1,5 @@
-import type { CommandRegistry } from "../framework/commands/registry.js";
-import type { CommandExecutor } from "../framework/execution/CommandExecutor.js";
+import type { CommandRegistry } from "../core/commands/registry.js";
+import type { CommandExecutor } from "../core/execution/CommandExecutor.js";
 import type { I18nService } from "../i18n/index.js";
 import type {
   BotCommand,

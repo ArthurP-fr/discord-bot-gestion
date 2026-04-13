@@ -1,8 +1,8 @@
 import { MessageFlags, type ChatInputCommandInteraction } from "discord.js";
 import type { SlashHandlerDeps } from "../types/handlers.js";
 
-import { parseSlashArgs } from "../framework/commands/argParser.js";
-import { buildSlashUsage } from "../framework/commands/usage.js";
+import { parseSlashArgs } from "../core/commands/argParser.js";
+import { buildSlashUsage } from "../core/commands/usage.js";
 import {
   buildCommandExecutionContext,
   createTranslator,

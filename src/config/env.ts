@@ -1,7 +1,7 @@
 import { config as loadEnv } from "dotenv";
 import { z } from "zod";
 
-import { SUPPORTED_LANGS } from "../../types/command.js";
+import { SUPPORTED_LANGS } from "../types/command.js";
 
 loadEnv();
 

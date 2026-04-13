@@ -22,9 +22,9 @@ import {
   type Message,
 } from "discord.js";
 
-import { env } from "../framework/config/env.js";
+import { env } from "../config/env.js";
 import { I18nService } from "../i18n/index.js";
-import { dispatchMemberMessage } from "../framework/memberMessages/memberMessageSender.js";
+import { dispatchMemberMessage } from "../services/memberMessages/memberMessageSender.js";
 import { getMemberMessageStore } from "../database/memberMessages/memberMessageStore.js";
 import {
   MEMBER_MESSAGE_RENDER_TYPES,

@@ -79,13 +79,13 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 
 ## Architecture
 
-- `src/framework/types/command.ts`: strict command schema
-- `src/framework/commands/defineCommand.ts`: default command completion
-- `src/framework/commands/registry.ts`: trigger/name mapping generated from i18n dictionaries
-- `src/framework/commands/argParser.ts`: prefix/slash args parsing from schema
-- `src/framework/execution/CommandExecutor.ts`: unified pipeline (permissions/cooldown/execute)
-- `src/framework/handlers/prefixHandler.ts`: prefix entrypoint
-- `src/framework/handlers/slashHandler.ts`: slash entrypoint
+- `src/types/command.ts`: strict command schema
+- `src/core/commands/defineCommand.ts`: default command completion
+- `src/core/commands/registry.ts`: trigger/name mapping generated from i18n dictionaries
+- `src/core/commands/argParser.ts`: prefix/slash args parsing from schema
+- `src/core/execution/CommandExecutor.ts`: unified pipeline (permissions/cooldown/execute)
+- `src/handlers/prefixHandler.ts`: prefix entrypoint
+- `src/handlers/slashHandler.ts`: slash entrypoint
 - `src/database/presence/presenceStore.ts`: PostgreSQL presence storage
 - `src/types/presenceTypes.ts`: shared presence types/validation
 - `src/i18n/*.json`: external i18n dictionaries
@@ -102,6 +102,6 @@ An example with two bot services is available in `docker-compose.multi-bot.examp
 ## Adding A Command
 
 1. Create a command object in `src/commands/...`
-2. Follow the schema in `src/framework/types/command.ts`
+2. Follow the schema in `src/types/command.ts`
 3. Add command to `src/commands/index.ts`
 4. If `AUTO_DEPLOY_SLASH=true`, restart the bot to sync slash commands automatically
