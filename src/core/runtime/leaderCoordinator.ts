@@ -1,11 +1,11 @@
 import type { Pool } from "pg";
 
 export interface LeaderCoordinator {
-  runIfLeader(lockName: string, task: () => Promise<void>): Promise<boolean>;
+  runIfLeader(lockName: string, botId: string, task: () => Promise<void>): Promise<boolean>;
 }
 
 export class LocalLeaderCoordinator implements LeaderCoordinator {
-  public async runIfLeader(_lockName: string, task: () => Promise<void>): Promise<boolean> {
+  public async runIfLeader(_lockName: string, _botId: string, task: () => Promise<void>): Promise<boolean> {
     await task();
     return true;
   }
@@ -17,8 +17,8 @@ export class PostgresLeaderCoordinator implements LeaderCoordinator {
     private readonly namespace = "discord-bot",
   ) {}
 
-  public async runIfLeader(lockName: string, task: () => Promise<void>): Promise<boolean> {
-    const advisoryLockKey = hashToInt32(`${this.namespace}:${lockName}`);
+  public async runIfLeader(lockName: string, botId: string, task: () => Promise<void>): Promise<boolean> {
+    const advisoryLockKey = hashToInt32(`${this.namespace}:bot:${botId}:leader:${lockName}`);
     const client = await this.pool.connect();
 
     try {

@@ -15,6 +15,7 @@ export interface CommandDispatchPort {
 export type CommandDispatchMode = "local" | "worker";
 
 export interface CommandExecutionJob {
+  botId: string;
   requestId: string;
   commandName: string;
   source: CommandSource;
@@ -65,11 +66,17 @@ export class WorkerCommandDispatchPort implements CommandDispatchPort {
 }
 
 const toExecutionJob = (command: BotCommand, ctx: CommandExecutionContext): CommandExecutionJob => {
+  const botId = ctx.transport.client.user?.id;
+  if (!botId) {
+    throw new Error("runtime bot id unavailable for worker command dispatch");
+  }
+
   const serializedArgs = Object.fromEntries(
     Object.entries(ctx.execution.args).map(([key, value]) => [key, serializeArgValue(value)]),
   );
 
   return {
+    botId,
     requestId: ctx.execution.requestId,
     commandName: command.meta.name,
     source: ctx.execution.source,

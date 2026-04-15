@@ -19,8 +19,15 @@ export const registerClientReady = (
 ): void => {
   client.once(Events.ClientReady, async () => {
     log.info({ botTag: client.user?.tag ?? "unknown" }, "client ready");
+
+    const botId = client.user?.id;
+    if (!botId) {
+      log.error("client ready event received without bot id, leader-only tasks skipped");
+      return;
+    }
+
     try {
-      const restoredByLeader = await leaderCoordinator.runIfLeader("presence-restore", async () => {
+      const restoredByLeader = await leaderCoordinator.runIfLeader("presence-restore", botId, async () => {
         await presenceService.restoreFromStorage(client);
       });
 
@@ -33,7 +40,7 @@ export const registerClientReady = (
 
     if (env.AUTO_DEPLOY_SLASH) {
       try {
-        const deployedByLeader = await leaderCoordinator.runIfLeader("slash-deploy", async () => {
+        const deployedByLeader = await leaderCoordinator.runIfLeader("slash-deploy", botId, async () => {
           const result = await deployApplicationCommands({
             token: env.DISCORD_TOKEN,
             clientId: env.DISCORD_CLIENT_ID,

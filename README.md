@@ -57,42 +57,32 @@ Professional command framework template for Discord.js `14.26.2` with:
    - npm run test
    - npm run check
 
-## Docker Deployment (Bot + PostgreSQL)
+## Docker Deployment (2 Bots + PostgreSQL)
 
-1. Configure `.env` with at least:
-   - `DISCORD_TOKEN`
-   - `DISCORD_CLIENT_ID`
+1. Fill production env files:
+   - `.env.bot-alpha.prod`
+   - `.env.bot-beta.prod`
+2. Set strong shared DB credentials:
    - `POSTGRES_DB`
    - `POSTGRES_USER`
    - `POSTGRES_PASSWORD`
-2. Start stack:
+3. Start stack:
    docker compose up -d --build
-3. Stop stack:
+4. Stop stack:
    docker compose down
 
 By default, `docker-compose.yml` provisions:
-- `bot`: the Discord bot container
+- `bot_alpha`: Discord bot instance A
+- `bot_beta`: Discord bot instance B
 - `postgres`: PostgreSQL 16 with persistent volume `postgres_data`
 
-The bot container uses:
-- `DATABASE_URL=postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@postgres:5432/<POSTGRES_DB>`
+Both bots use the same PostgreSQL service, and data remains isolated per bot through `bot_id` keys.
 
 Security defaults:
-- PostgreSQL is bound to `127.0.0.1` by default in Compose.
-- Database TLS verification is strict by default when SSL is enabled.
-- Keep strong values for `POSTGRES_PASSWORD` and rotate credentials if exposed.
-
-## Multi-Bot With One DB
-
-You can run several bot services against the same PostgreSQL instance.
-
-- Keep one shared `postgres` service.
-- Add additional bot services with different `DISCORD_TOKEN` / `DISCORD_CLIENT_ID`.
-- Keep `DATABASE_URL` pointing to the same PostgreSQL service.
-
-Because rows are keyed by `bot_id`, each bot keeps its own independent presence configuration.
-
-An example with two bot services is available in `docker-compose.multi-bot.example.yml`.
+- PostgreSQL is exposed only on the internal Compose network (`expose: 5432`, no host bind).
+- Bot containers enforce `no-new-privileges` and graceful stop.
+- Log rotation is enabled (`max-size=10m`, `max-file=3`).
+- Database TLS verification remains strict by default when SSL is enabled.
 
 ## Architecture
 

@@ -83,9 +83,14 @@ const envSchema = z.object({
   STATE_BACKEND: z.enum(["memory", "redis"]).default("memory"),
   REDIS_URL: z.preprocess(parseOptionalUrl, z.string().url("REDIS_URL must be a valid URL").optional()),
   COMMAND_DISPATCH_MODE: z.enum(["local", "worker"]).default("local"),
-  COMMAND_QUEUE_NAME: z.string().trim().min(1).default("bot:command-jobs"),
+  COMMAND_QUEUE_NAME: z.string().trim().min(1).default("bot:${botId}:command-jobs"),
   GLOBAL_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(20),
   GLOBAL_RATE_LIMIT_WINDOW_SECONDS: z.coerce.number().int().positive().default(10),
+  RATE_LIMIT_FAIL_OPEN: z
+    .string()
+    .optional()
+    .default("false")
+    .transform(toBoolean),
   ENABLE_LEADER_ELECTION: z
     .string()
     .optional()
@@ -101,9 +106,9 @@ if (parsed.DATABASE_SSL && !parsed.DATABASE_SSL_REJECT_UNAUTHORIZED && !parsed.A
   );
 }
 
-if ((parsed.STATE_BACKEND === "redis" || parsed.COMMAND_DISPATCH_MODE === "worker") && !parsed.REDIS_URL) {
+if (parsed.STATE_BACKEND === "redis" && !parsed.REDIS_URL) {
   throw new Error(
-    "REDIS_URL is required when STATE_BACKEND=redis or COMMAND_DISPATCH_MODE=worker.",
+    "REDIS_URL is required when STATE_BACKEND=redis.",
   );
 }
 

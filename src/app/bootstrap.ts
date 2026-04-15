@@ -8,8 +8,8 @@ import { env } from "../config/env.js";
 import { CommandRegistry } from "../core/commands/registry.js";
 import { CommandExecutor } from "../core/execution/CommandExecutor.js";
 import {
+  type CommandDispatchMode,
   LocalCommandDispatchPort,
-  WorkerCommandDispatchPort,
 } from "../core/execution/dispatch.js";
 import {
   MemoryCooldownStore,
@@ -19,7 +19,6 @@ import {
   MemoryGlobalRateLimitStore,
   RedisGlobalRateLimitStore,
 } from "../core/execution/globalRateLimitStore.js";
-import { RedisCommandJobPublisher } from "../core/execution/redisCommandJobPublisher.js";
 import { createScopedLogger } from "../core/logging/logger.js";
 import {
   LocalLeaderCoordinator,
@@ -67,6 +66,11 @@ const bindFatalProcessHandlers = (
 };
 
 export const bootstrap = async (): Promise<void> => {
+  const dispatchMode: CommandDispatchMode = env.COMMAND_DISPATCH_MODE;
+  if (dispatchMode === "worker") {
+    throw new Error("Worker mode is not implemented and must not be used in production");
+  }
+
   const pool = new Pool({
     connectionString: env.DATABASE_URL,
     ssl: env.DATABASE_SSL
@@ -77,21 +81,32 @@ export const bootstrap = async (): Promise<void> => {
       : undefined,
   });
 
-  const requiresRedis = env.STATE_BACKEND === "redis" || env.COMMAND_DISPATCH_MODE === "worker";
+  const requiresRedis = env.STATE_BACKEND === "redis";
   let redis: Redis | null = null;
 
   if (requiresRedis) {
     const redisUrl = env.REDIS_URL;
     if (!redisUrl) {
-      throw new Error("REDIS_URL is required when STATE_BACKEND=redis or COMMAND_DISPATCH_MODE=worker");
+      throw new Error("REDIS_URL is required when STATE_BACKEND=redis");
     }
 
-    redis = new Redis(redisUrl, {
-      maxRetriesPerRequest: null,
-      enableReadyCheck: true,
-    });
+    try {
+      redis = new Redis(redisUrl, {
+        maxRetriesPerRequest: null,
+        enableReadyCheck: true,
+      });
 
-    await redis.ping();
+      await redis.ping();
+    } catch (error) {
+      log.error(
+        {
+          err: error,
+          stateBackend: env.STATE_BACKEND,
+        },
+        "redis unavailable at startup",
+      );
+      throw error;
+    }
   }
 
   const presenceStore = new PostgresPresenceStore(pool);
@@ -127,23 +142,11 @@ export const bootstrap = async (): Promise<void> => {
       limit: env.GLOBAL_RATE_LIMIT_MAX_REQUESTS,
       windowSeconds: env.GLOBAL_RATE_LIMIT_WINDOW_SECONDS,
     },
+    rateLimitFailOpen: env.RATE_LIMIT_FAIL_OPEN,
     logger: createScopedLogger("command-executor"),
   });
 
-  const dispatcher = (() => {
-    if (env.COMMAND_DISPATCH_MODE === "worker") {
-      if (!redis) {
-        throw new Error("Worker dispatch mode requires an initialized Redis client");
-      }
-
-      return new WorkerCommandDispatchPort(
-        new RedisCommandJobPublisher(redis, env.COMMAND_QUEUE_NAME),
-        createScopedLogger("command-dispatcher"),
-      );
-    }
-
-    return new LocalCommandDispatchPort(executor);
-  })();
+  const dispatcher = new LocalCommandDispatchPort(executor);
 
   const leaderCoordinator = env.ENABLE_LEADER_ELECTION
     ? new PostgresLeaderCoordinator(pool, "discordjs-framework-template")
@@ -240,7 +243,9 @@ export const bootstrap = async (): Promise<void> => {
     log.info(
       {
         stateBackend: env.STATE_BACKEND,
-        commandDispatchMode: env.COMMAND_DISPATCH_MODE,
+        commandDispatchMode: dispatchMode,
+        configuredCommandDispatchMode: env.COMMAND_DISPATCH_MODE,
+        rateLimitFailOpen: env.RATE_LIMIT_FAIL_OPEN,
         rateLimit: {
           maxRequests: env.GLOBAL_RATE_LIMIT_MAX_REQUESTS,
           windowSeconds: env.GLOBAL_RATE_LIMIT_WINDOW_SECONDS,

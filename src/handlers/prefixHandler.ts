@@ -12,6 +12,36 @@ import {
 } from "./commandExecutionContext.js";
 import { createPrefixReply } from "./replyAdapter.js";
 
+const PREFIX_PRE_PARSE_THROTTLE_MS = 300;
+const PREFIX_PRE_PARSE_THROTTLE_SWEEP_INTERVAL_MS = 60_000;
+const PREFIX_PRE_PARSE_THROTTLE_MAX_AGE_MS = 5 * 60_000;
+
+const prefixPreParseThrottle = new Map<string, number>();
+let prefixPreParseThrottleLastSweepAt = 0;
+
+const shouldThrottlePrefixPreParse = (userId: string): boolean => {
+  const now = Date.now();
+  const lastSeenAt = prefixPreParseThrottle.get(userId);
+
+  if (lastSeenAt !== undefined && now - lastSeenAt < PREFIX_PRE_PARSE_THROTTLE_MS) {
+    return true;
+  }
+
+  prefixPreParseThrottle.set(userId, now);
+
+  if (now - prefixPreParseThrottleLastSweepAt >= PREFIX_PRE_PARSE_THROTTLE_SWEEP_INTERVAL_MS) {
+    for (const [trackedUserId, trackedAt] of prefixPreParseThrottle.entries()) {
+      if (now - trackedAt >= PREFIX_PRE_PARSE_THROTTLE_MAX_AGE_MS) {
+        prefixPreParseThrottle.delete(trackedUserId);
+      }
+    }
+
+    prefixPreParseThrottleLastSweepAt = now;
+  }
+
+  return false;
+};
+
 const resolvePrefixLang = (
   deps: PrefixHandlerDeps,
   command: BotCommand,
@@ -47,6 +77,10 @@ export const createPrefixHandler = (deps: PrefixHandlerDeps) => {
 
     const match = deps.registry.findByAnyPrefixTrigger(trigger);
     if (!match) {
+      return;
+    }
+
+    if (shouldThrottlePrefixPreParse(message.author.id)) {
       return;
     }
 

@@ -9,19 +9,24 @@ export interface CooldownConsumeResult {
 }
 
 export interface CooldownStore {
-  consume(commandName: string, subjectId: string, cooldownSeconds: number): Promise<CooldownConsumeResult>;
+  consume(botId: string, commandName: string, subjectId: string, cooldownSeconds: number): Promise<CooldownConsumeResult>;
 }
 
 export class MemoryCooldownStore implements CooldownStore {
   private readonly cooldowns = new Map<string, number>();
   private lastSweepAt = 0;
 
-  public async consume(commandName: string, subjectId: string, cooldownSeconds: number): Promise<CooldownConsumeResult> {
+  public async consume(
+    botId: string,
+    commandName: string,
+    subjectId: string,
+    cooldownSeconds: number,
+  ): Promise<CooldownConsumeResult> {
     if (cooldownSeconds <= 0) {
       return { allowed: true, retryAfterSeconds: 0 };
     }
 
-    const key = this.key(commandName, subjectId);
+    const key = this.key(botId, commandName, subjectId);
     const now = Date.now();
     this.sweepExpired(now);
 
@@ -37,8 +42,8 @@ export class MemoryCooldownStore implements CooldownStore {
     return { allowed: true, retryAfterSeconds: 0 };
   }
 
-  private key(commandName: string, subjectId: string): string {
-    return `${commandName}:${subjectId}`;
+  private key(botId: string, commandName: string, subjectId: string): string {
+    return `${botId}:${commandName}:${subjectId}`;
   }
 
   private sweepExpired(now: number): void {
@@ -65,15 +70,20 @@ export class MemoryCooldownStore implements CooldownStore {
 export class RedisCooldownStore implements CooldownStore {
   public constructor(
     private readonly redis: Redis,
-    private readonly keyPrefix = "bot:cooldown",
+    private readonly keyPrefix = "bot",
   ) {}
 
-  public async consume(commandName: string, subjectId: string, cooldownSeconds: number): Promise<CooldownConsumeResult> {
+  public async consume(
+    botId: string,
+    commandName: string,
+    subjectId: string,
+    cooldownSeconds: number,
+  ): Promise<CooldownConsumeResult> {
     if (cooldownSeconds <= 0) {
       return { allowed: true, retryAfterSeconds: 0 };
     }
 
-    const key = this.key(commandName, subjectId);
+    const key = this.key(botId, commandName, subjectId);
     const result = await this.redis.set(key, "1", "EX", cooldownSeconds, "NX");
     if (result === "OK") {
       return {
@@ -82,14 +92,19 @@ export class RedisCooldownStore implements CooldownStore {
       };
     }
 
-    const ttl = await this.redis.ttl(key);
+    let ttl = await this.redis.ttl(key);
+    if (ttl <= 0) {
+      await this.redis.expire(key, cooldownSeconds);
+      ttl = cooldownSeconds;
+    }
+
     return {
       allowed: false,
-      retryAfterSeconds: ttl > 0 ? ttl : cooldownSeconds,
+      retryAfterSeconds: ttl,
     };
   }
 
-  private key(commandName: string, subjectId: string): string {
-    return `${this.keyPrefix}:${commandName}:${subjectId}`;
+  private key(botId: string, commandName: string, subjectId: string): string {
+    return `${this.keyPrefix}:${botId}:cooldown:${commandName}:${subjectId}`;
   }
 }
