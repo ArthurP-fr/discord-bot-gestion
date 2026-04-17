@@ -1,34 +1,30 @@
 {
-  "name": "discordjs-framework-template",
-  "version": "1.0.0",
+  "name": "discord-bot-saas-platform",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "npm run typecheck && node scripts/build.mjs",
-    "migrate": "node scripts/migrate.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test tests/**/*.test.ts",
-    "check": "npm run typecheck && npm run test",
-    "start": "npm run migrate && node build/index.js"
-  },
-  "dependencies": {
-    "@napi-rs/canvas": "^0.1.97",
-    "discord.js": "14.26.2",
-    "dotenv": "16.4.5",
-    "ioredis": "^5.10.1",
-    "pg": "^8.20.0",
-    "pino": "^10.3.1",
-    "zod": "3.23.8"
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev:api": "npm run build -w @saas/shared && npm run dev -w @saas/api",
+    "dev:bot": "npm run build -w @saas/shared && npm run dev -w @saas/bot",
+    "dev:web": "npm run dev -w @saas/web",
+    "migrate": "npm run migrate -w @saas/api",
+    "start:api": "npm run start -w @saas/api",
+    "start:bot": "npm run start -w @saas/bot",
+    "start:web": "npm run start -w @saas/web",
+    "check": "npm run typecheck"
   },
   "devDependencies": {
-    "@types/node": "20.17.24",
-    "@types/pg": "^8.20.0",
-    "esbuild": "^0.25.12",
-    "tsx": "4.19.2",
-    "typescript": "5.8.2"
+    "@types/node": "^22.10.7",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
   }
 }

@@ -1,5 +1,11 @@
 node_modules/
 build/
+dist/
+.next/
+apps/*/dist/
+apps/*/.next/
+packages/*/dist/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example

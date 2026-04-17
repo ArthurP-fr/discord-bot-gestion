@@ -1,5 +1,12 @@
 node_modules
 build
+dist
+.next
+apps/*/dist
+apps/*/.next
+packages/*/dist
+*.tsbuildinfo
+**/*.tsbuildinfo
 .git
 .gitignore
 .env
