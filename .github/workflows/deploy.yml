@@ -1,0 +1,23 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, docker]
+
+    steps:
+      - name: Deploy on server
+        run: |
+          cd /srv/apps/flint
+
+          echo "Pull latest code"
+          git pull origin main
+
+          echo "Build & restart containers"
+          docker compose up -d --build --remove-orphans
+
+          echo "Cleanup old images"
+          docker image prune -f
