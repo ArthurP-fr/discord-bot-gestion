@@ -4,20 +4,42 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Deploy on server
+      - name: Deploy Flint Production
+        shell: bash
         run: |
-          cd /srv/apps/Flint
+          set -euo pipefail
 
-          echo "Pull latest code"
-          git pull origin main
+          echo "============================"
+          echo "    Starting deployment"
+          echo "============================"
 
-          echo "Build & restart containers"
+          APP_DIR="/srv/apps/Flint"
+
+          cd "$APP_DIR"
+
+          echo "Fetching latest code..."
+          git fetch origin main
+
+          echo "Resetting local state..."
+          git reset --hard origin/main
+
+          echo "Cleaning untracked files (keeping .env)"
+          git clean -fd -e .env
+
+          echo "Pulling/building containers..."
+          docker compose pull || true
           docker compose up -d --build --remove-orphans
 
-          echo "Cleanup old images"
+          echo "Cleaning unused Docker images..."
           docker image prune -f
+
+          echo "Deployment finished successfully"
