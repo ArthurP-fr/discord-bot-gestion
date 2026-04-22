@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, docker]
+    runs-on: self-hosted
 
     steps:
       - name: Deploy on server
