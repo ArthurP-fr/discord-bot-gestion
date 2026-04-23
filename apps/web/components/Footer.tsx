@@ -18,7 +18,7 @@ export default async function Footer() {
         <div className="text-sm text-[var(--foreground-muted)]">
           <a
             className="transition-colors hover:text-[var(--foreground)]"
-            href="https://github.com/"
+            href="https://github.com/ArthurP-fr/Flint"
             rel="noreferrer"
             target="_blank"
           >

@@ -1,173 +1,252 @@
-# Discord Bot SaaS Platform (Multi-Tenant)
+# 🚀 Flint — Discord Bot SaaS Platform (Multi-Tenant)
 
-Plateforme SaaS multi-tenant pour gérer des bots Discord avec un seul service bot dynamique.
+# [https://flint.arthurp.fr](https://flint.arthurp.fr/)
 
-## Vue d'ensemble
+Flint est une plateforme SaaS permettant de gérer et orchestrer plusieurs bots Discord depuis une seule infrastructure scalable.
 
-Cette version transforme le modèle "1 conteneur = 1 bot" en architecture scalable:
+Elle repose sur une architecture **multi-tenant**, sécurisée et conçue pour supporter une montée en charge horizontale.
 
-- Un seul `apps/bot` qui gère `N` bots dynamiquement
-- `apps/api` pour OAuth2 Discord + API sécurisée + orchestration des bots
-- `apps/web` (Next.js) pour le dashboard
-- PostgreSQL pour les données tenant-scopées
-- Redis + BullMQ pour la file d'actions de contrôle (`start`, `stop`, `restart`)
+---
 
-## Structure Monorepo
+## 🧠 Concept
 
-```text
+Au lieu de :
+
+> ❌ 1 bot = 1 container
+
+Flint utilise :
+
+> ✅ 1 bot manager = N bots dynamiques
+
+---
+
+## 🏗️ Architecture globale
+
+```txt
 /apps
-   /web        # Next.js dashboard
-   /api        # Backend API (OAuth2, JWT, gestion bots)
-   /bot        # Bot manager multi-instance dynamique
+  web        → Dashboard Next.js (UI SaaS)
+  api        → Backend (OAuth2 Discord + JWT + API multi-tenant)
+  bot        → Bot manager (runtime multi-bots Discord)
 /packages
-   /shared     # Types, crypto token, helpers Redis namespacés
+  shared     → Types, crypto, Redis helpers
 /database
-   /migrations # SQL versionné (inclut multi-tenant SaaS)
-docker-compose.yml
-.env
+  migrations → Schéma PostgreSQL versionné
 ```
 
-## Architecture Runtime
+---
 
-### 1) API (`apps/api`)
+## ⚙️ Stack technique
 
-- OAuth2 Discord (`/auth/discord/login`, `/auth/discord/callback`)
-- Session JWT en cookie `httpOnly`
-- Endpoints multi-tenant pour bots (`/api/bots`)
-- Validation du token bot via l'API Discord avant stockage
-- Chiffrement AES-256-GCM des tokens en base
-- Publication des actions de contrôle via BullMQ (Redis)
-- Rate limit par tenant (clé Redis namespacée `tenant:{tenantId}:...`)
+* **Frontend** : Next.js (App Router) + TailwindCSS
+* **Backend** : Node.js + Express
+* **Bot runtime** : Discord.js multi-instances
+* **DB** : PostgreSQL 16
+* **Queue** : Redis + BullMQ
+* **Infra** : Docker Compose
 
-### 2) Bot Manager (`apps/bot`)
+---
 
-- Charge les bots à relancer depuis PostgreSQL au démarrage
-- Maintient une map en mémoire:
+## 🤖 Architecture runtime
+
+### API (`apps/api`)
+
+* OAuth2 Discord login
+* JWT httpOnly session
+* API multi-tenant complète
+* Gestion des bots :
+
+  * create / start / stop / restart
+* Chiffrement AES-256-GCM des tokens Discord
+* Rate limiting par tenant
+* Queue de contrôle via BullMQ
+
+---
+
+### Bot Manager (`apps/bot`)
+
+* Un seul service pour tous les bots
+* Gestion dynamique :
 
 ```ts
-Map<botId, DiscordClient>;
+Map<botId, DiscordClient>
 ```
 
-- Worker BullMQ: consomme les jobs `start|stop|restart`
-- Met à jour l'état runtime (`starting`, `running`, `stopping`, `error`)
-- Journalise les événements runtime en base (`bot_runtime_events`)
+* Worker Redis (BullMQ) :
 
-### 3) Web (`apps/web`)
+  * start bot
+  * stop bot
+  * restart bot
+* Reconnexion automatique
+* Logs runtime en base
 
-- Pages principales:
-  - `/login`
-  - `/dashboard`
-- Dashboard utilisateur:
-  - Ajouter un bot (token)
-  - Voir la liste des bots du tenant
-  - `start / stop / restart`
+---
 
-## Schéma PostgreSQL (core SaaS)
+### Web App (`apps/web`)
 
-Migration: `database/migrations/0004_saas_multitenant.sql`
+Dashboard SaaS :
 
-- `tenants`
-  - `id` (UUID)
-  - `owner_user_id`
-- `users`
-  - `tenant_id` FK
-  - `discord_user_id` (unique)
-  - `role`
-- `bots`
-  - `tenant_id` FK
-  - `owner_user_id` FK
-  - `discord_bot_id` (unique global)
-  - `token_ciphertext`, `token_iv`, `token_tag`
-  - `status`, `last_error`
-- `bot_runtime_events`
-  - logs runtime par bot + tenant
+* Login Discord OAuth
+* Liste des bots du tenant
+* Création de bot via token
+* Contrôle runtime (start / stop / restart)
+* Interface multi-langue (i18n)
 
-Les tables legacy de configuration (`bot_presence_states`, `bot_member_message_configs`, `bot_log_event_configs`) sont enrichies avec `tenant_id` et `owner_user_id` pour respecter l'isolation multi-tenant stricte.
+---
 
-## API Principale
+## 🗄️ Base de données
 
-### Auth
+### Multi-tenant strict
 
-- `GET /auth/discord/login`
-- `GET /auth/discord/callback`
-- `POST /auth/logout`
-- `GET /api/me`
+Tables principales :
 
-### Bots
+* `tenants`
+* `users`
+* `bots`
+* `bot_runtime_events`
 
-- `GET /api/bots`
-- `POST /api/bots`
-  - body: `{ token: string, displayName?: string }`
-- `POST /api/bots/:botId/start`
-- `POST /api/bots/:botId/stop`
-- `POST /api/bots/:botId/restart`
+### Sécurité
 
-Tous ces endpoints sont tenant-scopés via la session.
+* Isolation totale via `tenant_id`
+* Tokens Discord chiffrés (AES-256-GCM)
+* Logs séparés par tenant
 
-## Sécurité
+---
 
-- Tokens bot jamais stockés en clair
-  - AES-256-GCM avec `TOKEN_ENCRYPTION_KEY` (32 bytes en base64)
-- Validation token côté Discord avant insertion
-- Session auth via JWT httpOnly cookie
-- Filtrage systématique des requêtes par `tenant_id`
-- Clés Redis namespacées par tenant
-- Rate limiting par tenant sur les actions de contrôle
+## 🔐 Sécurité
 
-## Docker Compose (fixe)
+* 🔒 Tokens bot jamais stockés en clair
+* 🍪 JWT en cookie httpOnly
+* 🧱 Isolation complète multi-tenant
+* ⚡ Rate limiting par tenant
+* 🧩 Redis namespaced
+* 🚫 Aucun bot exposé individuellement
 
-Services:
+---
 
-- `web`
-- `api`
-- `bot`
-- `postgres`
-- `redis`
+## 🐳 Docker architecture
 
-Pas de service par bot. Pas de `.env` par bot.
+Services :
 
-## Démarrage local
+* `web`
+* `api`
+* `bot`
+* `postgres`
+* `redis`
 
-1. Copier l'environnement:
+👉 Important :
+Aucun container par bot → tout est centralisé
+
+---
+
+## 🚀 Installation
+
+### 1. Cloner le projet
+
+```bash
+git clone https://github.com/ArthurP-fr/Flint.git
+cd Flint
+```
+
+---
+
+### 2. Configurer l’environnement
 
 ```bash
 cp .env.example .env
 ```
 
-2. Générer une clé de chiffrement valide (32 bytes base64):
+---
+
+### 3. Générer clé de chiffrement
 
 ```bash
 openssl rand -base64 32
 ```
 
-3. Installer les dépendances monorepo:
+---
+
+### 4. Installer les dépendances
 
 ```bash
 npm install
 ```
 
-4. Lancer la stack complète:
+---
+
+### 5. Lancer la stack
 
 ```bash
 docker compose up -d --build
 ```
 
-5. Dashboard:
+---
 
-- `http://localhost:3000`
+## 🌍 Accès
 
-API:
+* 🌐 Web : [http://localhost:3000](http://localhost:3000)
+* ⚙️ API : [http://localhost:4000/health](http://localhost:4000/health)
 
-- `http://localhost:4000/health`
+---
 
-Bot manager health:
+## 📡 API
 
-- `http://localhost:4100/health`
+### Auth
 
-## Notes Scalabilité
+* `GET /auth/discord/login`
+* `GET /auth/discord/callback`
+* `POST /auth/logout`
+* `GET /api/me`
 
-- Une instance bot unique peut gérer des dizaines/centaines de bots selon ressources.
-- Pour monter en charge horizontalement:
-  - scaler `apps/api`
-  - scaler `apps/bot` avec coordination queue/locks
-  - conserver Redis + PostgreSQL managés
+### Bots
+
+* `GET /api/bots`
+* `POST /api/bots`
+* `POST /api/bots/:botId/start`
+* `POST /api/bots/:botId/stop`
+* `POST /api/bots/:botId/restart`
+
+---
+
+## 📈 Scalabilité
+
+Flint est conçu pour être scalable horizontalement :
+
+* API → scalable horizontal
+* Bot manager → scalable avec Redis coordination
+* PostgreSQL → recommandé managé
+* Redis → central queue system
+
+👉 Un seul bot service peut gérer **des centaines de bots Discord**
+
+---
+
+# 🖼️ Screenshots
+
+### Home
+![Dashboard Home](docs/screenshots/dashboard-home.png)
+
+### Bots
+![Bots List](docs/screenshots/dashboard-create-bot.png)
+
+### Login
+![Create Bot](docs/screenshots/login.png)
+
+---
+
+## 🎯 Objectif du projet
+
+Flint vise à devenir une plateforme type :
+
+> “Discord Bot as a Service”
+
+avec une architecture proche d’un SaaS moderne (Vercel / Stripe style backend design).
+
+---
+
+## ⭐ Points forts
+
+* Multi-tenant natif
+* Runtime dynamique de bots
+* Sécurité forte (chiffrement + isolation)
+* Queue distribuée (BullMQ + Redis)
+* Architecture scalable dès le départ

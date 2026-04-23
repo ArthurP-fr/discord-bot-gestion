@@ -1,18 +1,41 @@
-node_modules
-build
-dist
-.next
-apps/*/dist
-apps/*/.next
-packages/*/dist
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# =========================
+# Builds
+# =========================
+build/
+dist/
+.next/
+apps/*/dist/
+apps/*/.next/
+packages/*/dist/
+
+# =========================
+# TypeScript
+# =========================
 *.tsbuildinfo
 **/*.tsbuildinfo
-.git
-.gitignore
+
+# =========================
+# Environment variables
+# =========================
 .env
 .env.*
 !.env.example
+
+# =========================
+# Logs
+# =========================
 *.log
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# =========================
+# Git
+# =========================
+.git/
+.gitignore

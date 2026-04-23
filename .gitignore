@@ -1,16 +1,47 @@
+# =========================
+# Dependencies
+# =========================
 node_modules/
+
+# =========================
+# Build outputs
+# =========================
 build/
 dist/
 .next/
+
 apps/*/dist/
 apps/*/.next/
 packages/*/dist/
+
+# =========================
+# TypeScript
+# =========================
 *.tsbuildinfo
+
+# =========================
+# Environment variables
+# =========================
 .env
 .env.*
 !.env.example
-.vscode/
+
+# =========================
+# Logs
+# =========================
 *.log
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
