@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { RTL_LOCALES, routing } from "../../i18n/routing";
 import "../globals.css";
 
+/* ---------------- Fonts ---------------- */
 const headingFont = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
@@ -19,13 +20,12 @@ const monoFont = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+/* ---------------- i18n params ---------------- */
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-/**
- * SEO + i18n + PWA + Social metadata
- */
+/* ---------------- Metadata (SEO only) ---------------- */
 export async function generateMetadata({
   params,
 }: {
@@ -39,20 +39,13 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: "metadata" });
 
-  const languages = routing.locales.reduce<Record<string, string>>(
-    (acc, currentLocale) => {
-      acc[currentLocale] = `/${currentLocale}`;
-      return acc;
-    },
-    {},
+  const languages = Object.fromEntries(
+    routing.locales.map((l) => [l, `/${l}`]),
   );
 
-  const title = t("title");
-  const description = t("description");
-
   return {
-    title,
-    description,
+    title: t("title"),
+    description: t("description"),
 
     metadataBase: new URL("https://flint.arthurp.fr"),
 
@@ -61,13 +54,8 @@ export async function generateMetadata({
       languages,
     },
 
-    // Theme (mobile browser bar color)
-    themeColor: [
-      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-      { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-    ],
+    applicationName: t("title"),
 
-    // Icons / Favicons / PWA
     icons: {
       icon: [
         { url: "/favicon.ico" },
@@ -79,33 +67,27 @@ export async function generateMetadata({
       apple: "/apple-touch-icon.png",
     },
 
-    // PWA / iOS App mode
     appleWebApp: {
       capable: true,
-      title,
+      title: t("title"),
       statusBarStyle: "default",
     },
 
-    applicationName: title,
-
-    // OpenGraph (Discord / WhatsApp / Twitter preview)
     openGraph: {
       type: "website",
       locale,
       url: `/${locale}`,
-      title,
-      description,
-      siteName: title,
+      title: t("title"),
+      description: t("description"),
+      siteName: t("title"),
     },
 
-    // Twitter card
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
+      title: t("title"),
+      description: t("description"),
     },
 
-    // SEO control
     robots: {
       index: true,
       follow: true,
@@ -113,22 +95,24 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Viewport (important mobile)
- */
+/* ---------------- Viewport (UI/mobile only) ---------------- */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#ffffff",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
+/* ---------------- Layout ---------------- */
 export default async function LocaleLayout({
   children,
   params,
-}: Readonly<{
+}: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}>) {
+}) {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
