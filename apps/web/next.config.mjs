@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const monorepoRoot = path.join(__dirname, "..", "..");
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -15,10 +16,10 @@ const nextConfig = {
   output: "standalone",
 
   // IMPORTANT pour éviter les problèmes de paths en monorepo
-  outputFileTracingRoot: process.cwd(),
+  outputFileTracingRoot: monorepoRoot,
 
   turbopack: {
-    root: path.join(__dirname, "..", ".."),
+    root: monorepoRoot,
   },
 
   // optimise build (optionnel mais recommandé)
